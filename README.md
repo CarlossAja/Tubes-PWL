@@ -1,4 +1,4 @@
-## NAMA APLIKASi
+## NAMA APLIKASI
 Form Pengaduan Masyarakat
 
 ## TIM PENGEMBANG
