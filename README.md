@@ -13,3 +13,6 @@ Aplikasi berbasis website yang kami buat bertujuan agar masyarakat dapat melapor
 ## FITUR
 Aplikasi berbasis web kami memiliki beberapa fitur. Fitur yang sudah selesai seperti Registrasi, Membuat Laporan, Menanggapi Laporan. Fitur Yang sedang dalam pengerjaan kami yaitu fitur delete, dimana user bisa menghapus laporannya.
 
+## PHP VERSION
+PHP 8.1.17  
+
