@@ -11,7 +11,7 @@ Form Pengaduan Masyarakat
 Aplikasi berbasis website yang kami buat bertujuan agar masyarakat dapat melaporkan keluhannya ke dalam form website kami lalu kami akan memberikan solusi/menyelesaikan permasalahan dari keluhan masyarakat
 
 ## FITUR
-Aplikasi berbasis web kami memiliki beberapa fitur. Fitur yang sudah selesai seperti Registrasi, Membuat Laporan, Menanggapi Laporan. Fitur Yang sedang dalam pengerjaan kami yaitu fitur delete, dimana user bisa menghapus laporannya.
+Aplikasi berbasis web kami memiliki beberapa fitur. Seperti user bikin laporan, admin menanggapi laporan, menambah petugas, mengganti foto profil, mengganti nama dan password.
 
 ## PHP VERSION
 PHP 8.1.17  
