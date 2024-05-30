@@ -16,6 +16,8 @@
             color: #6c757d;
         }
     </style>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
+
 @endsection
 
 @section('header')

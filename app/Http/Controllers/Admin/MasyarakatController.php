@@ -35,4 +35,5 @@ class MasyarakatController extends Controller
             return redirect()->back()->with(['notif' => 'Can\'t delete. Masyarakat has a relationship!']);
         }
     }
+    
 }

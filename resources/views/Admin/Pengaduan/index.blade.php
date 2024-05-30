@@ -2,6 +2,8 @@
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
+
 @endsection
 
 @section('header', 'Data Pengaduan')

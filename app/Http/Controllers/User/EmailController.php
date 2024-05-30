@@ -17,7 +17,7 @@ class EmailController extends Controller
     $nik = Auth::guard('masyarakat')->user()->nik;
     $email = Auth::guard('masyarakat')->user()->email;
     $nama = Auth::guard('masyarakat')->user()->nama;
-    $link = URL::temporarySignedRoute('pekat.verify', now()->addMinutes(30), ['nik' => $nik]);
+    $link = URL::temporarySignedRoute('pema.verify', now()->addMinutes(30), ['nik' => $nik]);
     Mail::to($email)->send(new VerifikasiEmailUntukRegistrasiPengaduanMasyarakat($nama, $link));
 
     // Ubah pesan flash

@@ -1,7 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Halaman Dashboard')
-    
+<link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
+
 @section('header', 'Dashboard')
 
 @section('content')

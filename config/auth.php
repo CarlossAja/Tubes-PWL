@@ -84,6 +84,7 @@ return [
         'masyarakats' => [
             'driver' => 'eloquent',
             'model' => \App\Models\Masyarakat::class,
+            
         ],
 
         'admins' => [

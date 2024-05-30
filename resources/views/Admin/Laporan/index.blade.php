@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Halaman Laporan')
-    
+<link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
 @section('header', 'Laporan Pengaduan')
     
 @section('content')

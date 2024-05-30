@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -133,11 +137,11 @@ class UserController extends Controller
         ]);
 
         // Kirim link verifikasi email
-        // $link = URL::temporarySignedRoute('pekat.verify', now()->addMinutes(30), ['nik' => $data['nik']]);
+        // $link = URL::temporarySignedRoute('pema.verify', now()->addMinutes(30), ['nik' => $data['nik']]);
         // Mail::to($data['email'])->send(new VerifikasiEmailUntukRegistrasiPengaduanMasyarakat($data['nama'], $link));
 
-        // Arahkan ke route pekat.index
-        return redirect()->route('pekat.index');
+        // Arahkan ke route pema.index
+        return redirect()->route('pema.index');
     }
 
     public function logout()
@@ -145,8 +149,8 @@ class UserController extends Controller
         // Fungsi logout dengan guard('masyarakat')
         Auth::guard('masyarakat')->logout();
 
-        // Arahkan ke route pekat.index
-        return redirect()->route('pekat.index');
+        // Arahkan ke route pema.index
+        return redirect()->route('pema.index');
     }
 
     public function storePengaduan(Request $request)
@@ -197,7 +201,7 @@ class UserController extends Controller
         // Pengecekan variable $pengaduan
         if ($pengaduan) {
             // Jika mengirim pengaduan berhasil
-            return redirect()->route('pekat.laporan', 'me')->with(['pengaduan' => 'Berhasil terkirim!', 'type' => 'success']);
+            return redirect()->route('pema.laporan', 'me')->with(['pengaduan' => 'Berhasil terkirim!', 'type' => 'success']);
         } else {
             // Jika mengirim pengaduan gagal
             return redirect()->back()->with(['pengaduan' => 'Gagal terkirim!', 'type' => 'danger']);
@@ -232,26 +236,167 @@ class UserController extends Controller
         }
     }
 
-    public function destroy($id_pengaduan)
+    public function deletePengaduan($id)
 {
-    // Pastikan hanya pengguna yang terautentikasi yang dapat mengakses metode ini
-    if (!Auth::guard('masyarakat')->check()) {
-        return redirect()->route('pekat.index')->with('error', 'Akses tidak sah.');
+    // Cari pengaduan berdasarkan ID
+    $pengaduan = Pengaduan::find($id);
+
+    // Pastikan pengaduan ditemukan
+    if ($pengaduan) {
+        // Pastikan pengguna yang menghapus laporan adalah pemilik laporan
+        if ($pengaduan->user->id == Auth::guard('masyarakat')->user()->id) {
+            // Mulai transaksi database
+            DB::beginTransaction();
+
+            try {
+                // Hapus semua hubungan pengaduan dengan tanggapan
+                $pengaduan->tanggapan()->delete();
+
+                // Hapus laporan
+                $pengaduan->delete();
+
+                // Commit transaksi
+                DB::commit();
+
+                return redirect()->back()->with('success', 'Laporan berhasil dihapus.');
+            } catch (\Exception $e) {
+                // Rollback transaksi jika terjadi kesalahan
+                DB::rollback();
+                return redirect()->back()->with('error', 'Gagal menghapus laporan. Silakan coba lagi.');
+            }
+        } else {
+            // Jika pengguna bukan pemilik laporan
+            return redirect()->back()->with('error', 'Anda tidak diizinkan menghapus laporan ini.');
+        }
+    } else {
+        // Jika laporan tidak ditemukan
+        return redirect()->back()->with('error', 'Laporan tidak ditemukan.');
     }
-
-    $pengaduan = Pengaduan::findOrFail($id_pengaduan);
-
-    // Pastikan hanya pemilik laporan yang dapat menghapus laporan
-    if ($pengaduan->nik !== Auth::guard('masyarakat')->user()->nik) {
-        return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk menghapus laporan ini.');
-    }
-
-    // Hapus laporan dari database
-    $pengaduan->delete();
-
-    return redirect()->back()->with('success', 'Laporan berhasil dihapus');
+}
+public function profil()
+{
+    // Ambil data pengguna yang sedang login
+    $user = Auth::guard('masyarakat')->user();
+    // Tampilkan halaman profil dengan data pengguna
+    return view('profile', compact('user'));
 }
 
+public function updateProfile(Request $request)
+{
+    // Validasi data yang dikirimkan
+    $validatedData = $request->validate([
+        'nama' => 'required|string',
+        'username' => ['required', 'string'],
+        'telp' => 'required|string',
+    ]);
 
+    // Mulai transaksi database
+    DB::beginTransaction();
+
+    try {
+        // Ambil pengguna yang sedang login
+        $user = Auth::guard('masyarakat')->user();
+
+        // Simpan nama tanpa memperhatikan validasi unik
+        $user->nama = $validatedData['nama'];
+        $user->save();
+
+        // Simpan username tanpa memperhatikan validasi unik
+        $user->username = $validatedData['username'];
+        $user->save();
+
+        // Simpan telepon tanpa memperhatikan validasi unik
+        $user->telp = $validatedData['telp'];
+        $user->save();
+
+        // Commit transaksi
+        DB::commit();
+
+        // Redirect kembali ke halaman profil dengan pesan sukses
+        return redirect()->back()->with('success', 'Informasi profil berhasil diperbarui.');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+        // Redirect kembali ke halaman profil dengan pesan error
+        return redirect()->back()->with('error', 'Gagal memperbarui informasi profil. Silakan coba lagi.');
+    }
+}
+
+public function changePassword(Request $request)
+{
+    // Validasi data yang dikirimkan
+    $validatedData = $request->validate([
+        'current_password' => 'required',
+        'password' => 'required|min:6|confirmed',
+    ], [
+        'current_password.required' => 'Masukkan password saat ini.',
+        'password.required' => 'Masukkan password baru.',
+        'password.min' => 'Password baru harus terdiri dari minimal 6 karakter.',
+        'password.confirmed' => 'Konfirmasi password baru tidak cocok.',
+    ]);
+
+    // Ambil pengguna yang sedang login
+    $user = Auth::guard('masyarakat')->user();
+
+    // Periksa apakah password saat ini sesuai
+    if (!Hash::check($request->current_password, $user->password)) {
+        return redirect()->back()->with('error', 'Password sekarang salah!!');
+     } 
+    //else {
+    //     return redirect()->back()->with('error', 'Password baru dan konfirmasi password harus sama, serta harus terdiri dari minimal 6 karakter.');
+    // }
+
+    // Mulai transaksi database
+    DB::beginTransaction();
+
+    try {
+        // Ubah password pengguna di database
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        // Commit transaksi
+        DB::commit();
+
+        // Redirect kembali ke halaman profil dengan pesan sukses
+        return redirect()->back()->with('success', 'Password berhasil diubah.');
+    } catch (\Exception $e) {
+        // Rollback transaksi jika terjadi kesalahan
+        DB::rollback();
+        // Redirect kembali ke halaman profil dengan pesan error
+        return redirect()->back()->with('error', 'Gagal mengubah password. Silakan coba lagi.');
+    }
+}
+
+public function uploadPhoto(Request $request)
+{
+    // Validasi foto yang diunggah
+    $request->validate([
+        'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // maksimal 2MB
+    ]);
+
+    // Ambil file foto dari request
+    $photo = $request->file('photo');
+
+    // Ambil user yang sedang login
+    $user = Auth::guard('masyarakat')->user();
+
+    // Simpan path foto profil lama sebelum diupdate
+    $oldPhotoPath = $user->photo;
+
+    // Simpan foto baru ke direktori public\storage\assets\fotoprofil
+    $newPhotoPath = $photo->store('assets/fotoprofil', 'public');
+
+    // Update path foto profil pengguna di database
+    $user->photo = $newPhotoPath;
+    $user->save();
+
+    // Hapus foto lama dari penyimpanan jika ada
+    if ($oldPhotoPath && Storage::disk('public')->exists($oldPhotoPath)) {
+        Storage::disk('public')->delete($oldPhotoPath);
+    }
+
+    // Redirect kembali ke halaman profil dengan pesan sukses
+    return redirect()->back()->with('success', 'Profile picture berhasil diupload.');
+}
 
 }

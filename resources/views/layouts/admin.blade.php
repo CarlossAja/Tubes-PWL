@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <title>@yield('title')</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
         integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
@@ -25,6 +26,41 @@
             border: 1px solid #6a70fc;
             color: #fff;
         }
+
+        .dropdown-menu {
+            background-color: rgba(0, 0, 0, 0.8); /* Black with transparency */
+        }
+
+        .dropdown-item {
+            color: #fff;
+        }
+
+        .dropdown-item:hover {
+            color: #fff;
+            background-color: #dc3545; /* Bootstrap red */
+        }
+
+        .nav-link.dropdown-toggle::after {
+            content: '';
+            display: inline-block;
+            margin-right: 111112px;
+            vertical-align: 0.255em;
+            border-top: 0.3em solid;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0;
+            border-left: 0.3em solid transparent;
+        }
+
+        .nav-link.dropdown-toggle:focus,
+        .nav-link.dropdown-toggle:active,
+        .dropdown-item:focus,
+        .dropdown-item:active {
+            background-color: transparent; /* Keeps the original background color */
+            color: inherit; /* Keeps the original text color */
+            outline: 2px solid rgba(0, 0, 0, 0.5); /* Adds a black transparent outline */
+            border-radius: 8px; /* Adds rounded corners */
+            box-shadow: none; /* Removes any box shadow */
+        }
     </style>
 
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
@@ -36,7 +72,7 @@
     <div class="wrapper">
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3 class="mb-0">PEKAT</h3>
+                <h3 class="mb-0">PEMA</h3>
                 <p class="text-white mb-0">Pengaduan Masyarakat</p>
             </div>
 
@@ -87,7 +123,14 @@
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            <a href="{{ route('admin.logout') }}" class="btn btn-white btn-sm">{{ Auth::guard('admin')->user()->nama_petugas }}</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ Auth::guard('admin')->user()->nama_petugas }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('admin.logout') }}">Logout</a>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -111,10 +154,9 @@
                 $(this).toggleClass('active');
             });
         });
-
     </script>
 
     @yield('js')
-    </body>
+</body>
 
 </html>

@@ -24,4 +24,5 @@ class Masyarakat extends Authenticatable
         'provider_id',
         'provider',
     ];
+    
 }

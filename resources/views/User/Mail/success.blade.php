@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
         integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
@@ -36,9 +37,9 @@
                         Verifikasi Email Berhasil
                     </div>
                     <div class="card-body">
-                        <p>Sekarang Anda bisa mengirimkan pengaduan di website PEKAT. Dan akun Anda sudah aman sekarang.
+                        <p>Sekarang Anda bisa mengirimkan pengaduan di website PEMA. Dan akun Anda sudah aman sekarang.
                         </p>
-                        <a href="{{ route('pekat.index') }}" class="btn btn-purple">Masuk ke Akun</a>
+                        <a href="{{ route('pema.index') }}" class="btn btn-purple">Masuk ke Akun</a>
                     </div>
                 </div>
             </div>

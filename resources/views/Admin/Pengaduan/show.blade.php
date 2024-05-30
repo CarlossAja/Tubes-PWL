@@ -1,7 +1,8 @@
 @extends('layouts.admin')
 
 @section('title', 'Detail Pengaduan')
-    
+<link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
+
 @section('css')
     <style>
         .text-primary:hover {
@@ -138,7 +139,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="tanggapan">Tanggapana</label>
+                            <label for="tanggapan">Tanggapan</label>
                             <textarea name="tanggapan" id="tanggapan" rows="4" class="form-control" placeholder="Belum ada tanggapan">{{ $tanggapan->tanggapan ?? '' }}</textarea>
                         </div>
                         <button type="submit" class="btn btn-purple">KIRIM</button>

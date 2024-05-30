@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
         integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+        <link rel="icon" type="image/png" href="{{ asset('images/logo-pema.png') }}">
 
     <style>
             .header-video {
@@ -29,6 +30,10 @@
             background: #6a70fc;
             width: 100%;
             color: #fff;
+        }
+
+        .card-body{
+            background: rgba(255, 255, 255, 0.5); /* White background with 50% opacity */
         }
 
     </style>
@@ -63,7 +68,7 @@
                     </div>
                 </div>
                 
-                <a href="{{ route('pekat.index') }}" class="btn btn-warning text-white mt-3" style="width: 100%">Kembali
+                <a href="{{ route('pema.index') }}" class="btn btn-warning text-white mt-3" style="width: 100%">Kembali
                     ke Halaman Utama</a>
             </div>
         </div>

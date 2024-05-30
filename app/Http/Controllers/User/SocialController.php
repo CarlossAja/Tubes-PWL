@@ -23,7 +23,7 @@ class SocialController extends Controller
 
         Auth::guard('masyarakat')->login($authUser, true);
 
-        return redirect()->route('pekat.index');
+        return redirect()->route('pema.index');
     }
 
     public function findOrCreateUser($user, $provider)
